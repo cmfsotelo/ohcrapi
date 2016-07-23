@@ -41,5 +41,3 @@ out/
 *.jks
 .idea/
 gradle/
-gradlew
-gradlew.bat
