@@ -39,3 +39,7 @@ out/
 
 # Keystore files
 *.jks
+.idea/
+gradle/
+gradlew
+gradlew.bat
