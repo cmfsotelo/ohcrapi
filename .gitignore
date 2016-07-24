@@ -40,4 +40,3 @@ out/
 # Keystore files
 *.jks
 .idea/
-gradle/
