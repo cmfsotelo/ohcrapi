@@ -21,16 +21,43 @@ import java.io.OutputStream;
  * @version $Revision : 1 $
  */
 public class OhCRapiLocal {
-    final static String TAG = "OCR";
+    final static String TAG = OhCRapiLocal.class.getName();
     static TessBaseAPI mLocalOcrEngine;
 
-    //ProgressNotifier
-    public static void init(Context ctx, String tessDirectoryPath, String trainedDataLanguage, TessBaseAPI.ProgressNotifier progressNotifier) {
+    /** Initializes the Ocr engine (TessBaseAPI). If the engine already exists, nothing is done.
+     * @param ctx - Context
+     * @param tessDirectoryPath   - Directory where the tessdata and traineddata file will be created
+     * @param trainedDataLanguage - Language of the traineddata file
+     * @param progressNotifier    - Optional progressNotifier interface
+     */
+    public static void init(@NonNull Context ctx, @NonNull String tessDirectoryPath, @NonNull String trainedDataLanguage, @Nullable TessBaseAPI.ProgressNotifier progressNotifier) {
         if (mLocalOcrEngine == null) {
             mLocalOcrEngine = touchTesseract(ctx, tessDirectoryPath, trainedDataLanguage, progressNotifier);
         }
     }
 
+    /** Restarts the Ocr engine (TessBaseAPI). If the engine already exists, that engine is stopped and a new one is created.
+     * @param ctx - Context
+     * @param tessDirectoryPath   - Directory where the tessdata and traineddata file will be created
+     * @param trainedDataLanguage - Language of the traineddata file
+     * @param progressNotifier    - Optional progressNotifier interface
+     */
+    public static void restart(@NonNull Context ctx, @NonNull String tessDirectoryPath, @NonNull String trainedDataLanguage, @Nullable TessBaseAPI.ProgressNotifier progressNotifier) {
+        if (mLocalOcrEngine != null) {
+            mLocalOcrEngine.clear();
+            mLocalOcrEngine.end();
+        }
+        mLocalOcrEngine = touchTesseract(ctx, tessDirectoryPath, trainedDataLanguage, progressNotifier);
+    }
+
+    /**
+     *
+     * @param ctx - Context
+     * @param tessDirectoryPath   - Directory where the tessdata and traineddata file will be created
+     * @param trainedDataLanguage - Language of the traineddata file
+     * @param progressNotifier    - Optional progressNotifier interface
+     * @return returns the created TessBaseAPI (OCR Engine) instance
+     */
     @NonNull
     static TessBaseAPI touchTesseract(@NonNull Context ctx, @NonNull String tessDirectoryPath, @NonNull String trainedDataLanguage, @Nullable TessBaseAPI.ProgressNotifier progressNotifier) {
         File tessDir = new File(tessDirectoryPath + File.separator + "tessdata");
@@ -55,12 +82,12 @@ public class OhCRapiLocal {
                 //gin.close();
                 out.close();
 //                mInstance.trainedDataLanguage = trainedDataLanguage;
-                Log.v(OhCRapiLocal.TAG, "Copied " + tessData.getAbsolutePath());
+                Log.v(TAG, "Copied " + tessData.getAbsolutePath());
             } catch (IOException e) {
-                Log.e(OhCRapiLocal.TAG, "Was unable to copy " + tessData.getAbsolutePath() + " : " + e.toString());
+                Log.e(TAG, "Was unable to copy " + tessData.getAbsolutePath() + " : " + e.toString());
             }
         } else {
-            Log.d(OhCRapiLocal.TAG, "TessData already present");
+            Log.d(TAG, "TessData already present");
         }
         TessBaseAPI tess;
         if (progressNotifier != null) {

@@ -137,20 +137,24 @@ public class OhCRapiLocalTask extends AsyncTask<Void, Void, Void> {
     private String scanImage() {
         long startTime = System.nanoTime();
         String recognizedText;
-        baseApi.setImage(this.mBitmap);
-        if (rectangles == null || rectangles.isEmpty()) {
-            recognizedText = baseApi.getUTF8Text();
-            baseApi.clear();
-        } else {
-            StringBuilder sb = new StringBuilder();
-            for (Rect r : rectangles) {
-                baseApi.setRectangle(r);
-                String s = baseApi.getUTF8Text();
-                Log.d(TAG, s);
-                sb.append(s);
-                sb.append("\n");
+        if (baseApi != null) {
+            baseApi.setImage(this.mBitmap);
+            if (rectangles == null || rectangles.isEmpty()) {
+                recognizedText = baseApi.getUTF8Text();
+                baseApi.clear();
+            } else {
+                StringBuilder sb = new StringBuilder();
+                for (Rect r : rectangles) {
+                    baseApi.setRectangle(r);
+                    String s = baseApi.getUTF8Text();
+                    Log.d(TAG, s);
+                    sb.append(s);
+                    sb.append("\n");
+                }
+                recognizedText = sb.toString();
             }
-            recognizedText = sb.toString();
+        } else {
+            recognizedText = "OCR engine missing... Initialized much?";
         }
         long endTime = System.nanoTime();
 

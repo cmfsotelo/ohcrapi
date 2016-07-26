@@ -16,7 +16,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -27,14 +30,36 @@ import java.util.Random;
  * @version $Revision : 1 $
  */
 public class OhCRapiRemote {
-    protected final static String TAG = OhCRapiRemote.class.getName();
+    public final static String publicUrl1 = "https://api.ocr.space/parse/image"; // OCR API Endpoints
+    public final static String publicUrl2 = "https://apifree2.ocr.space/parse/image"; // OCR API Endpoints
+    final static String TAG = OhCRapiRemote.class.getName();
     final static Random random = new Random();
-    final static String url = "https://api.ocr.space/parse/image"; // OCR API Endpoints
-    final static String url2 = "https://apifree2.ocr.space/parse/image"; // OCR API Endpoints
+    static List<String> urlCollection = new ArrayList<>();
 
+    static {
+        urlCollection.add(publicUrl1);
+        urlCollection.add(publicUrl2);
+    }
+
+    public static void setUrlCollection(@NonNull Collection<String> urlCollection) {
+        OhCRapiRemote.urlCollection = new ArrayList<>(urlCollection);
+    }
+
+    public static void addUrl(@NonNull String url) {
+        OhCRapiRemote.urlCollection.add(url);
+    }
+
+    public static void addAllUrl(@NonNull Collection<String> urlCollection) {
+        OhCRapiRemote.urlCollection.addAll(urlCollection);
+    }
+
+    @NonNull
     public static String getOcrUrl() {
-        int num = random.nextInt(2);
-        return (num == 1) ? url : url2;
+        if (urlCollection.isEmpty()) {
+            return "EMPTYURL";
+        }
+        int num = random.nextInt(urlCollection.size());
+        return urlCollection.get(num);
     }
 
     public static void performRequest(@NonNull Context ctx, @NonNull final String apiKey, @NonNull Bitmap imageFile, @NonNull final String language, @NonNull OhCRapiRemoteListener listener) {
