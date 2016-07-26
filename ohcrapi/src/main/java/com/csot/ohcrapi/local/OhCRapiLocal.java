@@ -1,4 +1,4 @@
-package com.csot.ohcrapi;
+package com.csot.ohcrapi.local;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -13,7 +13,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Random;
 
 /**
  * Description Created on 19-07-2016.
@@ -21,43 +20,15 @@ import java.util.Random;
  * @author <a href="mailto:carlos.sotelo7@gmail.com">csotelo</a>
  * @version $Revision : 1 $
  */
-public class OhCRapi {
+public class OhCRapiLocal {
     final static String TAG = "OCR";
-    final static Random random = new Random();
-    final static String url = "https://api.ocr.space/parse/image"; // OCR API Endpoints
-    final static String url2 = "https://apifree2.ocr.space/parse/image"; // OCR API Endpoints
-    static OhCRapi mInstance;
     static TessBaseAPI mLocalOcrEngine;
-    String trainedDataLanguage = "eng";
-    String apiKey;
-
-    private OhCRapi(String trainedDataLanguage, String apiKey) {
-        this.trainedDataLanguage = trainedDataLanguage;
-        this.apiKey = apiKey;
-    }
-
-    public static void initRemote(String trainedDataLanguage, String apiKey) {
-        mInstance = new OhCRapi(trainedDataLanguage, apiKey);
-    }
 
     //ProgressNotifier
-    public static void initLocal(Context ctx, String tessDirectoryPath, String trainedDataLanguage, TessBaseAPI.ProgressNotifier progressNotifier) {
+    public static void init(Context ctx, String tessDirectoryPath, String trainedDataLanguage, TessBaseAPI.ProgressNotifier progressNotifier) {
         if (mLocalOcrEngine == null) {
             mLocalOcrEngine = touchTesseract(ctx, tessDirectoryPath, trainedDataLanguage, progressNotifier);
         }
-    }
-
-    public static String getApiKey() {
-        return mInstance.apiKey;
-    }
-
-    public static String getTrainedDataLanguage() {
-        return mInstance.trainedDataLanguage;
-    }
-
-    public static String getOcrUrl() {
-        int num = random.nextInt(2);
-        return (num == 1) ? url : url2;
     }
 
     @NonNull
@@ -84,12 +55,12 @@ public class OhCRapi {
                 //gin.close();
                 out.close();
 //                mInstance.trainedDataLanguage = trainedDataLanguage;
-                Log.v(OhCRapi.TAG, "Copied " + tessData.getAbsolutePath());
+                Log.v(OhCRapiLocal.TAG, "Copied " + tessData.getAbsolutePath());
             } catch (IOException e) {
-                Log.e(OhCRapi.TAG, "Was unable to copy " + tessData.getAbsolutePath() + " : " + e.toString());
+                Log.e(OhCRapiLocal.TAG, "Was unable to copy " + tessData.getAbsolutePath() + " : " + e.toString());
             }
         } else {
-            Log.d(OhCRapi.TAG, "TessData already present");
+            Log.d(OhCRapiLocal.TAG, "TessData already present");
         }
         TessBaseAPI tess;
         if (progressNotifier != null) {

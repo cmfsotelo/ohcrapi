@@ -1,4 +1,6 @@
-package com.csot.ohcrapi;
+package com.csot.ohcrapi.local;
+
+import com.googlecode.tesseract.android.TessBaseAPI;
 
 /**
  * Description Created on 19-07-2016.
@@ -6,11 +8,9 @@ package com.csot.ohcrapi;
  * @author <a href="mailto:carlos.sotelo7@gmail.com">csotelo</a>
  * @version $Revision : 1 $
  */
-public interface OhCRapiListener {
+public interface OhCRapiLocalListener extends TessBaseAPI.ProgressNotifier{
 
     void onOhCRapiStarted();
-
-//    void onOhCRapiFinished(Bitmap bitmap, String recognizedText);
 
     void onOhCRapiFinished(String recognizedText);
 }

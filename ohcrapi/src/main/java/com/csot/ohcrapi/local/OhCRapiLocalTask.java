@@ -1,4 +1,4 @@
-package com.csot.ohcrapi;
+package com.csot.ohcrapi.local;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,25 +21,25 @@ import java.util.Collection;
  */
 public class OhCRapiLocalTask extends AsyncTask<Void, Void, Void> {
     protected final static String TAG = OhCRapiLocalTask.class.getName();
-    private OhCRapiListener mOhCRapiListener;
+    private OhCRapiLocalListener mOhCRapiLocalListener;
     private String filePath;
     private Bitmap mBitmap;
     private String scannedText;
-    private TessBaseAPI baseApi = OhCRapi.mLocalOcrEngine;
+    private TessBaseAPI baseApi = OhCRapiLocal.mLocalOcrEngine;
     private Collection<Rect> rectangles;
 
-    public OhCRapiLocalTask(OhCRapiListener OhCRapiListener, String filePath) {
-        this.mOhCRapiListener = OhCRapiListener;
+    public OhCRapiLocalTask(OhCRapiLocalListener OhCRapiLocalListener, String filePath) {
+        this.mOhCRapiLocalListener = OhCRapiLocalListener;
         this.filePath = filePath;
     }
 
-    public OhCRapiLocalTask(OhCRapiListener OhCRapiListener, Bitmap bitmap) {
-        this.mOhCRapiListener = OhCRapiListener;
+    public OhCRapiLocalTask(OhCRapiLocalListener OhCRapiLocalListener, Bitmap bitmap) {
+        this.mOhCRapiLocalListener = OhCRapiLocalListener;
         this.mBitmap = bitmap;
     }
 
-    public OhCRapiLocalTask(OhCRapiListener OhCRapiListener, Bitmap bitmap, Collection<Rect> rectangles) {
-        this.mOhCRapiListener = OhCRapiListener;
+    public OhCRapiLocalTask(OhCRapiLocalListener OhCRapiLocalListener, Bitmap bitmap, Collection<Rect> rectangles) {
+        this.mOhCRapiLocalListener = OhCRapiLocalListener;
         this.mBitmap = bitmap;
         this.rectangles = rectangles;
     }
@@ -54,13 +54,13 @@ public class OhCRapiLocalTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        mOhCRapiListener.onOhCRapiStarted();
+        mOhCRapiLocalListener.onOhCRapiStarted();
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        mOhCRapiListener.onOhCRapiFinished(scannedText);
+        mOhCRapiLocalListener.onOhCRapiFinished(scannedText);
     }
 
     private void processImage() {
