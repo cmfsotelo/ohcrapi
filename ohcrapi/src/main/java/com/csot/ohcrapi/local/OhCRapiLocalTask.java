@@ -19,12 +19,11 @@ import java.util.Collection;
  * @author <a href="mailto:carlos.sotelo7@gmail.com">csotelo</a>
  * @version $Revision : 1 $
  */
-public class OhCRapiLocalTask extends AsyncTask<Void, Void, Void> {
+public class OhCRapiLocalTask extends AsyncTask<Void, Void, Object> {
     protected final static String TAG = OhCRapiLocalTask.class.getName();
     private OhCRapiLocalListener mOhCRapiLocalListener;
     private String filePath;
     private Bitmap mBitmap;
-    private String scannedText;
     private TessBaseAPI baseApi = OhCRapiLocal.mLocalOcrEngine;
     private Collection<Rect> rectangles;
 
@@ -45,10 +44,19 @@ public class OhCRapiLocalTask extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(Void... params) {
-        processImage();
-        scannedText = scanImage();
-        return null;
+    protected Object doInBackground(Void... params) {
+        try {
+            if (OhCRapiLocal.checkTessData()) {
+                processImage();
+                return scanImage();
+            } else {
+//                Log.e(TAG, "No TessData found!");
+                return new IOException("No TessData found!");
+            }
+        } catch (Exception e) {
+//            Log.e(TAG, "ERROR", e);
+            return e;
+        }
     }
 
     @Override
@@ -58,9 +66,13 @@ public class OhCRapiLocalTask extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
-        mOhCRapiLocalListener.onOhCRapiFinished(scannedText);
+    protected void onPostExecute(Object result) {
+        super.onPostExecute(result);
+        if (result instanceof String) {
+            mOhCRapiLocalListener.onOhCRapiFinished((String) result);
+        } else {
+            mOhCRapiLocalListener.onOhCRapiFinished((Exception) result);
+        }
     }
 
     private void processImage() {
@@ -154,12 +166,12 @@ public class OhCRapiLocalTask extends AsyncTask<Void, Void, Void> {
                 recognizedText = sb.toString();
             }
         } else {
-            recognizedText = "OCR engine missing... Initialized much?";
+            throw new IllegalStateException("OCR engine not initialized!");
         }
         long endTime = System.nanoTime();
 
         long duration = (endTime - startTime) / 1000000;  //divide by 1000000 to get milliseconds.
-        Log.v(TAG, "Took: " + duration + "ms");
+        Log.v(TAG, "OCR Took: " + duration + "ms");
         return recognizedText;
     }
 

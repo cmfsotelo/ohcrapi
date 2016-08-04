@@ -6,11 +6,6 @@ package com.csot.ohcrapi.local;
  * @author <a href="mailto:carlos.sotelo7@gmail.com">csotelo</a>
  * @version $Revision : 1 $
  */
-public interface OhCRapiLocalListener {
-
-    void onOhCRapiStarted();
-
-    void onOhCRapiFinished(String recognizedText);
-
-    void onOhCRapiFinished(Exception e);
+public interface OhCRapiLocalInitializedCallback {
+    void onOhCRapiInitialized();
 }
