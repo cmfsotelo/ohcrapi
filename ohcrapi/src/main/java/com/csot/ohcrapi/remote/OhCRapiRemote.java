@@ -33,10 +33,10 @@ import java.util.Random;
  * @version $Revision : 1 $
  */
 public class OhCRapiRemote {
-    public final static String publicUrl1 = "https://api.ocr.space/parse/image"; // OCR API Endpoints
-    public final static String publicUrl2 = "https://apifree2.ocr.space/parse/image"; // OCR API Endpoints
-    final static String TAG = OhCRapiRemote.class.getName();
-    final static Random random = new Random();
+    public static final String publicUrl1 = "https://api.ocr.space/parse/image"; // OCR API Endpoints
+    public static final String publicUrl2 = "https://apifree2.ocr.space/parse/image"; // OCR API Endpoints
+    static final String TAG = OhCRapiRemote.class.getName();
+    static final Random random = new Random();
     static List<String> urlCollection = new ArrayList<>();
     static String apiKey;
     static String language;
@@ -140,7 +140,6 @@ public class OhCRapiRemote {
                                 listener.onOhCRapiFinished(parsedText);
                             }
                         } catch (JSONException e) {
-//                            Log.e(TAG, e.getMessage(), e);
                             listener.onOhCRapiFinished(e);
                         }
                     }
@@ -148,38 +147,6 @@ public class OhCRapiRemote {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-//                        NetworkResponse networkResponse = error.networkResponse;
-//                        String errorMessage = "Unknown error";
-//                        if (networkResponse == null) {
-//                            if (error.getClass().equals(TimeoutError.class)) {
-//                                errorMessage = "Request timeout";
-//                            } else if (error.getClass().equals(NoConnectionError.class)) {
-//                                errorMessage = "Failed to connect server";
-//                            }
-//                        } else {
-//                            String result = new String(networkResponse.data);
-//                            try {
-//                                JSONObject response = new JSONObject(result);
-//                                String status = response.getString("status");
-//                                String message = response.getString("message");
-//                                Log.e("Error Status", status);
-//                                Log.e("Error Message", message);
-//                                if (networkResponse.statusCode == 404) {
-//                                    errorMessage = "Resource not found";
-//                                } else if (networkResponse.statusCode == 401) {
-//                                    errorMessage = message + " Please login again";
-//                                } else if (networkResponse.statusCode == 400) {
-//                                    errorMessage = message + " Check your inputs";
-//                                } else if (networkResponse.statusCode == 500) {
-//                                    errorMessage = message + " Something is getting wrong";
-//                                }
-//                            } catch (JSONException e) {
-////                                Log.e(TAG, errorMessage, e);
-//                                listener.onOhCRapiFinished(e);
-//                            }
-//                        }
-////                        Log.e("Error", errorMessage);
-////                        error.printStackTrace();
                         listener.onOhCRapiFinished(error);
                     }
                 }) {
